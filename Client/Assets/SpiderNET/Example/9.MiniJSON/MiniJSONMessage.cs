@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
+// MiniJSON
 // https://gist.github.com/darktable/1411710
 
 namespace SpiderNET.Core
 {
-    public class MiniJSONMessage : Message<Hashtable>
+    public class MiniJSONMessage : Message<Dictionary<string, object>>
     {
         public MiniJSONMessage(string id)
             : base(id)
@@ -22,15 +24,15 @@ namespace SpiderNET.Core
             return new ArraySegment<byte>(Encoding.UTF8.GetBytes(MiniJSON.Json.Serialize(Data)));
         }
 
-        protected override Hashtable Decode(ArraySegment<byte> data)
+        protected override Dictionary<string, object> Decode(ArraySegment<byte> data)
         {
-            return (Hashtable)MiniJSON.Json.Deserialize(Encoding.UTF8.GetString(data.Array, data.Offset, data.Count));
+            return (Dictionary<string, object>)MiniJSON.Json.Deserialize(Encoding.UTF8.GetString(data.Array, data.Offset, data.Count));
         }
 
         public void AddField(string key, object value)
         {
             if (Data == null)
-                Data = new Hashtable();
+                Data = new Dictionary<string, object>();
             Data.Add(key, value);
         }
     }
