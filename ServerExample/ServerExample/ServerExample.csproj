@@ -113,6 +113,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\Basic\BasicController.cs" />
+    <Compile Include="Scripts\Compression\CompressFilter.cs" />
+    <Compile Include="Scripts\Compression\CompressionController.cs" />
     <Compile Include="Scripts\ErrorCode\CommentAttribute.cs" />
     <Compile Include="Scripts\ErrorCode\ErrorCode.cs" />
     <Compile Include="Scripts\ErrorCode\ErrorCodeController.cs" />

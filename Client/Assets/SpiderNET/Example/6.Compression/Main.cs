@@ -5,11 +5,11 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace Example.ErrorCode
+namespace Example.Compression
 {
     public partial class Main : MonoBehaviour
     {
-        private Session session;
+        private CompressSession session;
         private MessageIDTable IDTable;
         private Dictionary<MessageID, MethodInfo> HandlerFunctionTable;
         private readonly string HANDLER_FUNCTION_NAME = "On_{0}";
@@ -17,15 +17,15 @@ namespace Example.ErrorCode
         void Start()
         {
             GameObject go = new GameObject("Session");
-            session = go.AddComponent<Session>();
+            session = go.AddComponent<CompressSession>();
             session.onSend += OnSend;
             session.onReceive += OnReceive;
             session.onError += OnError;
             session.Connect("localhost", 4623);
 
             IDTable = new MessageIDTable();
-            IDTable.AddID(MessageID.GET_KEY, "ErrorCode/GET_KEY");
-            IDTable.AddID(MessageID.LOGIN, "ErrorCode/LOGIN");
+            IDTable.AddID(MessageID.GET_KEY, "Compression/GET_KEY");
+            IDTable.AddID(MessageID.LOGIN, "Compression/LOGIN");
 
             HandlerFunctionTable = new Dictionary<MessageID, MethodInfo>();
             foreach (var id in IDTable.IDs)
@@ -78,8 +78,8 @@ namespace Example.ErrorCode
             KeyValueMessage recvMessage = new KeyValueMessage(id);
             recvMessage.RawData = new ArraySegment<byte>(buffer, offset, length);
 
-            MessageHandler_Normal(recvMessage);
-            //MessageHandler_Reflection(recvMessage);
+            //MessageHandler_Normal(recvMessage);
+            MessageHandler_Reflection(recvMessage);
         }
 
         void OnError(string id, string message, Exception e)

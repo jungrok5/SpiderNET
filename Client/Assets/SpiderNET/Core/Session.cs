@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace SpiderNET.Core
 {
     public class Session : MonoBehaviour
     {
-        private static readonly string CONTENT_LENGTH = "Content-Length";
-        private static readonly string CONTENT_TYPE = "Content-Type";
-        private static readonly string URL = "http://{0}:{1}/{2}";
+        protected static readonly string CONTENT_LENGTH = "Content-Length";
+        protected static readonly string CONTENT_TYPE = "Content-Type";
+        protected static readonly string URL = "http://{0}:{1}/{2}";
 
         public delegate void SendEvent(string id);
         public delegate void ReceiveEvent(string id, byte[] buffer, int offset, int length);
@@ -19,18 +20,26 @@ namespace SpiderNET.Core
 
         protected string RemoteAddress;
         protected int Port;
+#if UNITY_4_5
+        protected Dictionary<string, string> Headers;
+#else
         protected Hashtable Headers;
+#endif
 
         public virtual void Connect(string remoteAddress, int port)
         {
             RemoteAddress = remoteAddress;
             Port = port;
+#if UNITY_4_5
+            Headers = new Dictionary<string, string>();
+#else
             Headers = new Hashtable();
+#endif
         }
-        
+
         public virtual void Send(IMessage message)
         {
-            Headers[CONTENT_LENGTH] = message.RawData.Count;
+            Headers[CONTENT_LENGTH] = message.RawData.Count.ToString();
             Headers[CONTENT_TYPE] = message.ContentType;
             StartCoroutine(ReceiveCallback(new WWW(string.Format(URL, RemoteAddress, Port, message.ID), message.RawData.Array, Headers), message.ID));
 
