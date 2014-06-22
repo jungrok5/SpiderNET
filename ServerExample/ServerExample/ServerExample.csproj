@@ -115,6 +115,10 @@
     <Compile Include="Scripts\Basic\BasicController.cs" />
     <Compile Include="Scripts\Compression\CompressFilter.cs" />
     <Compile Include="Scripts\Compression\CompressionController.cs" />
+    <Compile Include="Scripts\Encryption\AES.cs" />
+    <Compile Include="Scripts\Encryption\EncryptFilter.cs" />
+    <Compile Include="Scripts\Encryption\EncryptionController.cs" />
+    <Compile Include="Scripts\Encryption\EncryptStream.cs" />
     <Compile Include="Scripts\ErrorCode\CommentAttribute.cs" />
     <Compile Include="Scripts\ErrorCode\ErrorCode.cs" />
     <Compile Include="Scripts\ErrorCode\ErrorCodeController.cs" />

@@ -7,9 +7,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ServerExample.Scripts.Compression
+namespace ServerExample.Scripts.Encryption
 {
-    public class CompressFilter : ActionFilterAttribute
+    public class EncryptFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -19,12 +19,12 @@ namespace ServerExample.Scripts.Compression
                 return;
             
             acceptEncoding = acceptEncoding.ToUpperInvariant();
-            if (acceptEncoding != "GZIP") 
+            if (acceptEncoding != "ENCRYPT") 
                 return;
 
             HttpResponseBase response = filterContext.HttpContext.Response;
-            response.AddHeader("Content-Encoding", "gzip");
-            response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
+            response.AddHeader("Content-Encoding", "encrypt");
+            response.Filter = new EncryptStream(response.Filter, MvcApplication.EncryptKey);
         }
     }
 }
