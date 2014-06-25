@@ -12,13 +12,11 @@ namespace Example.Encryption
         protected static readonly string CONTENT_ENCODING = "Content-Encoding";
         protected static readonly string ENCODING_ENCRYPT = "encrypt";
 
-        public string EncryptKey { get; set; }
-
         public override void Send(IMessage message)
         {
-            if (string.IsNullOrEmpty(EncryptKey) == false)
+            byte[] encryptedData = AES.Encrypt(message.RawData.Array, message.RawData.Offset, message.RawData.Count);
+            if (encryptedData != null)
             {
-                byte[] encryptedData = AES.Encrypt(message.RawData.Array, message.RawData.Offset, message.RawData.Count, EncryptKey);
                 Headers[CONTENT_LENGTH] = encryptedData.Length.ToString();
                 Headers[CONTENT_TYPE] = message.ContentType;
                 Headers[ACCEPT_ENCODING] = ENCODING_ENCRYPT;
@@ -48,12 +46,14 @@ namespace Example.Encryption
                         break;
                     }
                 }
-                if (string.IsNullOrEmpty(EncryptKey) == false && 
-                    string.IsNullOrEmpty(contentEncoding) == false && 
+                if (string.IsNullOrEmpty(contentEncoding) == false && 
                     www.responseHeaders[contentEncoding].Equals(ENCODING_ENCRYPT, System.StringComparison.OrdinalIgnoreCase) == true)
                 {
-                    byte[] decryptedData = AES.Decrypt(www.bytes, 0, www.bytes.Length, EncryptKey);
-                    OnReceive(id, decryptedData, 0, decryptedData.Length);
+                    byte[] decryptedData = AES.Decrypt(www.bytes, 0, www.bytes.Length);
+                    if (decryptedData != null)
+                        OnReceive(id, decryptedData, 0, decryptedData.Length);
+                    else
+                        OnError(id, "Decrypt fail", null);
                 }
                 else
                 {

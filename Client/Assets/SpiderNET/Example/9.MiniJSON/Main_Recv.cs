@@ -3,11 +3,11 @@ using System.Collections;
 using SpiderNET.Core;
 using System;
 
-namespace Example.Encryption
+namespace Example.MiniJSON
 {
     public partial class Main : MonoBehaviour
     {
-        void On_GET_KEY(KeyValueMessage message)
+        void On_GET_KEY(MiniJSONMessage message)
         {
             if (message.Data.ContainsKey("errorcode") == true)
             {
@@ -17,13 +17,12 @@ namespace Example.Encryption
             foreach (var kvp in message.Data)
             {
                 Debug.Log(string.Format("{0}={1}", kvp.Key, kvp.Value));
-                AES.Init((string)kvp.Value);
             }
 
             Send_LOGIN(SystemInfo.deviceUniqueIdentifier, (byte)Application.platform);
         }
 
-        void On_LOGIN(KeyValueMessage message)
+        void On_LOGIN(MiniJSONMessage message)
         {
             if (message.Data.ContainsKey("errorcode") == true)
             {

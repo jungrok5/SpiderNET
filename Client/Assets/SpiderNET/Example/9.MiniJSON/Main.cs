@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Example.Encryption
+namespace Example.MiniJSON
 {
     public partial class Main : MonoBehaviour
     {
-        private EncryptSession session;
+        private Session session;
         private MessageIDTable IDTable;
         private Dictionary<MessageID, MethodInfo> HandlerFunctionTable;
         private readonly string HANDLER_FUNCTION_NAME = "On_{0}";
@@ -18,15 +18,15 @@ namespace Example.Encryption
         void Start()
         {
             GameObject go = new GameObject("Session");
-            session = go.AddComponent<EncryptSession>();
+            session = go.AddComponent<Session>();
             session.onSend += OnSend;
             session.onReceive += OnReceive;
             session.onError += OnError;
             session.Connect("localhost", 4623);
 
             IDTable = new MessageIDTable();
-            IDTable.AddID(MessageID.GET_KEY, "Encryption/GET_KEY");
-            IDTable.AddID(MessageID.LOGIN, "Encryption/LOGIN");
+            IDTable.AddID(MessageID.GET_KEY, "MiniJSON/GET_KEY");
+            IDTable.AddID(MessageID.LOGIN, "MiniJSON/LOGIN");
 
             HandlerFunctionTable = new Dictionary<MessageID, MethodInfo>();
             foreach (var id in IDTable.IDs)
@@ -38,7 +38,7 @@ namespace Example.Encryption
             //Send_LOGIN(SystemInfo.deviceUniqueIdentifier, (byte)Application.platform);
         }
 
-        void MessageHandler_Normal(KeyValueMessage message)
+        void MessageHandler_Normal(MiniJSONMessage message)
         {
             MessageID id = IDTable[message.ID];
             switch (id)
@@ -55,7 +55,7 @@ namespace Example.Encryption
             }
         }
 
-        void MessageHandler_Reflection(KeyValueMessage message)
+        void MessageHandler_Reflection(MiniJSONMessage message)
         {
             MessageID id = IDTable[message.ID];
             MethodInfo mi = HandlerFunctionTable[id];
@@ -76,7 +76,7 @@ namespace Example.Encryption
         {
             Debug.Log(string.Format("[id:{0}] Recv", IDTable[id]));
 
-            KeyValueMessage recvMessage = new KeyValueMessage(id);
+            MiniJSONMessage recvMessage = new MiniJSONMessage(id);
             recvMessage.RawData = new ArraySegment<byte>(buffer, offset, length);
 
             //MessageHandler_Normal(recvMessage);

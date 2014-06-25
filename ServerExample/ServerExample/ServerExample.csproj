@@ -126,6 +126,7 @@
     <Compile Include="Scripts\ErrorCode\ErrorCode_LOGIN.cs" />
     <Compile Include="Scripts\MessageHandler\MessageHandlerController.cs" />
     <Compile Include="Scripts\MessageID\MessageIDController.cs" />
+    <Compile Include="Scripts\MiniJSON\MiniJSONController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />

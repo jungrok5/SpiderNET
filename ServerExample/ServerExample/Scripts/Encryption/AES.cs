@@ -9,50 +9,47 @@ namespace ServerExample.Scripts.Encryption
 {
     public static class AES
     {
-        public static byte[] Encrypt(byte[] data, int offset, int length, string key)
+        private static ICryptoTransform encryptTransform;
+        private static ICryptoTransform decryptTransform;
+
+        public static void Init(string key)
         {
+            byte[] keyData = UTF8Encoding.UTF8.GetBytes(key);
+
+            RijndaelManaged rijndael = new RijndaelManaged();
+            rijndael.Key = keyData;
+            rijndael.Mode = CipherMode.ECB;
+            rijndael.Padding = PaddingMode.PKCS7;
+
+            encryptTransform = rijndael.CreateEncryptor();
+            decryptTransform = rijndael.CreateDecryptor();
+        }
+
+        public static byte[] Encrypt(byte[] data, int offset, int length)
+        {
+            if (encryptTransform == null)
+                return null;
+
             try
             {
-                byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
-                //byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
-
-                RijndaelManaged rDel = new RijndaelManaged();
-                rDel.Key = keyArray;
-                rDel.Mode = CipherMode.ECB;
-                rDel.Padding = PaddingMode.PKCS7;
-
-                ICryptoTransform cTransform = rDel.CreateEncryptor();
-
-                byte[] resultData = cTransform.TransformFinalBlock(data, offset, length);
-                //return Convert.ToBase64String(resultArray, 0, resultArray.Length);
-                return resultData;
+                return encryptTransform.TransformFinalBlock(data, offset, length);
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
         }
 
-        public static byte[] Decrypt(byte[] data, int offset, int length, string key)
+        public static byte[] Decrypt(byte[] data, int offset, int length)
         {
+            if (decryptTransform == null)
+                return null;
+
             try
             {
-                byte[] keyArray = UTF8Encoding.UTF8.GetBytes(key);
-                //toDecrypt = HttpUtility.UrlDecode(toDecrypt);
-                //byte[] toEncryptArray = Convert.FromBase64String(toDecrypt);
-
-                RijndaelManaged rDel = new RijndaelManaged();
-                rDel.Key = keyArray;
-                rDel.Mode = CipherMode.ECB;
-                rDel.Padding = PaddingMode.PKCS7;
-
-                ICryptoTransform cTransform = rDel.CreateDecryptor();
-
-                byte[] resultData = cTransform.TransformFinalBlock(data, offset, length);
-                //return UTF8Encoding.UTF8.GetString(resultArray);
-                return resultData;
+                return decryptTransform.TransformFinalBlock(data, offset, length);
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

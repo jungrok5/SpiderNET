@@ -52,7 +52,7 @@ namespace ServerExample.Scripts.Encryption
             int readBytes = BaseStream.Read(buffer, 0, buffer.Length);
             if (readBytes > 0)
             {
-                byte[] decryptData = AES.Decrypt(buffer, 0, readBytes, EncryptKey);
+                byte[] decryptData = AES.Decrypt(buffer, 0, readBytes);
                 Array.Copy(decryptData, 0, array, offset, decryptData.Length);
             }
             return readBytes;
@@ -67,7 +67,7 @@ namespace ServerExample.Scripts.Encryption
         }
         public override void Write(byte[] array, int offset, int count)
         {
-            byte[] encryptData = AES.Encrypt(array, offset, count, EncryptKey);
+            byte[] encryptData = AES.Encrypt(array, offset, count);
             BaseStream.Write(encryptData, 0, encryptData.Length);
         }
         protected override void Dispose(bool disposing)
