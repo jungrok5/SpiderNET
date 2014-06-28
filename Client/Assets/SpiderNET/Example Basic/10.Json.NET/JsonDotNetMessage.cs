@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SpiderNET.Core;
 using System;
 using System.Collections;
 using System.Text;
@@ -7,7 +8,7 @@ using UnityEngine;
 // Json.NET
 // http://james.newtonking.com/json
 
-namespace SpiderNET.Core
+namespace Example.JsonNET
 {
     public class JsonDotNetMessage : Message<object>
     {
@@ -18,7 +19,7 @@ namespace SpiderNET.Core
         {
             ContentType = "application/json";
         }
-
+        
         public override ArraySegment<byte> RawData
         {
             get { return Encode(); }
@@ -45,6 +46,17 @@ namespace SpiderNET.Core
                 Encoding.UTF8.GetString(
                 NotDecodeRawData.Array, 
                 NotDecodeRawData.Offset, 
+                NotDecodeRawData.Count));
+        }
+
+        public object Decode()
+        {
+            if (NotDecodeRawData.Array == null)
+                return null;
+            return JsonConvert.DeserializeObject(
+                Encoding.UTF8.GetString(
+                NotDecodeRawData.Array,
+                NotDecodeRawData.Offset,
                 NotDecodeRawData.Count));
         }
     }
