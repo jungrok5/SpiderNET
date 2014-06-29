@@ -9,29 +9,16 @@ namespace Example.LitJSON
     {
         void Send_GET_KEY(string version)
         {
-            JsonDotNetMessage message = new JsonDotNetMessage(IDTable[MessageID.GET_KEY]);
-            message.Data = new { version = version };
+            LitJSONMessage message = new LitJSONMessage(IDTable[MessageID.GET_KEY]);
+            message.AddField("version", version);
             session.Send(message);
         }
 
         void Send_LOGIN(string udid, byte platform)
         {
-            JsonDotNetMessage message = new JsonDotNetMessage(IDTable[MessageID.LOGIN]);
-            message.Data = new { udid = udid, platform = platform };
-            session.Send(message);
-        }
-
-        void Send_GET_KEY_USE_PROTOCOL(Protocol_GET_KEY_REQ sendData)
-        {
-            JsonDotNetMessage message = new JsonDotNetMessage(IDTable[MessageID.GET_KEY_USE_PROTOCOL]);
-            message.Data = sendData;
-            session.Send(message);
-        }
-
-        void Send_LOGIN_USE_PROTOCOL(Protocol_LOGIN_REQ sendData)
-        {
-            JsonDotNetMessage message = new JsonDotNetMessage(IDTable[MessageID.LOGIN_USE_PROTOCOL]);
-            message.Data = sendData;
+            LitJSONMessage message = new LitJSONMessage(IDTable[MessageID.LOGIN]);
+            message.AddField("udid", udid);
+            message.AddField("platform", platform);
             session.Send(message);
         }
     }

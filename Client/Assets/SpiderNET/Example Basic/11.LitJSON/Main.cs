@@ -27,8 +27,6 @@ namespace Example.LitJSON
             IDTable = new MessageIDTable();
             IDTable.AddID(MessageID.GET_KEY, "LitJSON/GET_KEY");
             IDTable.AddID(MessageID.LOGIN, "LitJSON/LOGIN");
-            IDTable.AddID(MessageID.GET_KEY_USE_PROTOCOL, "LitJSONProtocol/GET_KEY");
-            IDTable.AddID(MessageID.LOGIN_USE_PROTOCOL, "LitJSONProtocol/LOGIN");
 
             HandlerFunctionTable = new Dictionary<MessageID, MethodInfo>();
             foreach (var id in IDTable.IDs)
@@ -36,16 +34,10 @@ namespace Example.LitJSON
                 HandlerFunctionTable.Add(id, this.GetType().GetMethod(string.Format(HANDLER_FUNCTION_NAME, id), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance));
             }
 
-            // 무명 클래스 이용
-            //Send_GET_KEY("0.0.1");
-
-            // 미리 정의된 프로토콜 클래스 이용
-            Protocol_GET_KEY_REQ sendData = new Protocol_GET_KEY_REQ();
-            sendData.szVersion = "0.0.1";
-            Send_GET_KEY_USE_PROTOCOL(sendData);
+            Send_GET_KEY("0.0.1");
         }
 
-        void MessageHandler_Normal(JsonDotNetMessage message)
+        void MessageHandler_Normal(LitJSONMessage message)
         {
             MessageID id = IDTable[message.ID];
             switch (id)
@@ -56,19 +48,13 @@ namespace Example.LitJSON
                 case MessageID.LOGIN:
                     On_LOGIN(message);
                     break;
-                case MessageID.GET_KEY_USE_PROTOCOL:
-                    On_GET_KEY_USE_PROTOCOL(message);
-                    break;
-                case MessageID.LOGIN_USE_PROTOCOL:
-                    On_LOGIN_USE_PROTOCOL(message);
-                    break;
                 default:
                     Debug.LogWarning(string.Format("Receive unknown message:{0}", id));
                     break;
             }
         }
 
-        void MessageHandler_Reflection(JsonDotNetMessage message)
+        void MessageHandler_Reflection(LitJSONMessage message)
         {
             MessageID id = IDTable[message.ID];
             MethodInfo mi = HandlerFunctionTable[id];
@@ -89,7 +75,7 @@ namespace Example.LitJSON
         {
             Debug.Log(string.Format("[id:{0}] Recv", IDTable[id]));
 
-            JsonDotNetMessage recvMessage = new JsonDotNetMessage(id);
+            LitJSONMessage recvMessage = new LitJSONMessage(id);
             recvMessage.RawData = new ArraySegment<byte>(buffer, offset, length);
 
             //MessageHandler_Normal(recvMessage);

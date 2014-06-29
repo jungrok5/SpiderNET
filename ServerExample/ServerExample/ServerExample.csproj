@@ -133,6 +133,7 @@
     <Compile Include="Scripts\JsonNET\CommentAttribute.cs" />
     <Compile Include="Scripts\JsonNET\JsonNETController.cs" />
     <Compile Include="Scripts\JsonNET\JsonNETProtocolController.cs" />
+    <Compile Include="Scripts\LitJSON\LitJSONController.cs" />
     <Compile Include="Scripts\MessageHandler\MessageHandlerController.cs" />
     <Compile Include="Scripts\MessageID\MessageIDController.cs" />
     <Compile Include="Scripts\MiniJSON\MiniJSONController.cs" />
