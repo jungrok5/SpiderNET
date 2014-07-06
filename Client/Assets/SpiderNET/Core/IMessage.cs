@@ -13,12 +13,7 @@ namespace SpiderNET.Core
         ArraySegment<byte> RawData { get; set; }
     }
 
-    public interface IMessage<T> : IMessage
-    {
-        T Data { get; set; }
-    }
-
-    public abstract class Message<T> : IMessage<T>
+    public abstract class Message<T> : IMessage
     {
         public string ID { get; set; }
         public string ContentType { get; protected set; }
